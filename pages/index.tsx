@@ -1,5 +1,5 @@
 import React from "react";
-import { GlobalStyles } from "../src/theme/GlobalStyles";
+import { GlobalStyles } from "@ui/theme/GlobalStyles";
 
 // const bg = "https://mariosouto.com/cursos/crudcomqualidade/bg"; // importing using a URL
 const bg = "/bg.jpeg"; // importing from the public folder
