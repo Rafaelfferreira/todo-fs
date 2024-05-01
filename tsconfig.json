@@ -4,7 +4,9 @@
     "jsx": "preserve", /* Specify what JSX code is generated. */
     "baseUrl": ".",
     "paths": {
-      "@ui/*": ["src/ui/*"]
+      "@ui/*": ["src/ui/*"],
+      "@db-crud-todo": ["core/crud.ts"],
+      "@server/*": ["src/server/*"],
     },
 
   
