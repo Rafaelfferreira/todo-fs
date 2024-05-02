@@ -6,16 +6,16 @@ const bg = "/bg.jpeg"; // importing from the public folder
 
 const todos = [
     {
-        "id": "30c08ad9-cd30-4e5f-8fb9-b84cb358b9a5",
-        "date": "2024-04-27T22:31:07.560Z",
-        "content": "Primeira TODO",
-        "done": false
+        id: "30c08ad9-cd30-4e5f-8fb9-b84cb358b9a5",
+        date: "2024-04-27T22:31:07.560Z",
+        content: "Primeira TODO",
+        done: false,
     },
     {
-        "id": "a49eb7da-9586-4646-b2d9-c365e84b261d",
-        "date": "2024-04-27T22:31:07.561Z",
-        "content": "Terceira TODO com novo content!",
-        "done": false
+        id: "a49eb7da-9586-4646-b2d9-c365e84b261d",
+        date: "2024-04-27T22:31:07.561Z",
+        content: "Terceira TODO com novo content!",
+        done: false,
     },
 ];
 
@@ -66,14 +66,15 @@ function HomePage() {
                                     <td>
                                         <input type="checkbox" />
                                     </td>
-                                    <td>d4f26</td>
+                                    <td>{currentTodo.id.substring(0, 4)}</td>
                                     <td>{currentTodo.content}</td>
                                     <td align="right">
-                                        <button data-type="delete">Apagar</button>
+                                        <button data-type="delete">
+                                            Apagar
+                                        </button>
                                     </td>
                                 </tr>
-                            )
-
+                            );
                         })}
 
                         {/* <tr>
