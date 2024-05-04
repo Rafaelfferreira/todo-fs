@@ -1,25 +1,26 @@
 import React from "react";
 import { GlobalStyles } from "@ui/theme/GlobalStyles";
+import { todoController } from "@ui/controller/todos";
 
 // const bg = "https://mariosouto.com/cursos/crudcomqualidade/bg"; // importing using a URL
 const bg = "/bg.jpeg"; // importing from the public folder
 
-const todos = [
-    {
-        id: "30c08ad9-cd30-4e5f-8fb9-b84cb358b9a5",
-        date: "2024-04-27T22:31:07.560Z",
-        content: "Primeira TODO",
-        done: false,
-    },
-    {
-        id: "a49eb7da-9586-4646-b2d9-c365e84b261d",
-        date: "2024-04-27T22:31:07.561Z",
-        content: "Terceira TODO com novo content!",
-        done: false,
-    },
-];
+type HomeTodo = {
+    id: string;
+    content: string;
+};
 
 function HomePage() {
+    const [todos, setTodos] = React.useState<HomeTodo[]>([]);
+
+    // UseEffect allow us to run code when the component is rendered and upload it whenever the second parameter is refreshed
+    // In this case, since we pass [] to the second parameter, the code will only run once
+    React.useEffect(() => {
+        todoController.get().then((todos) => {
+            setTodos(todos);
+        });
+    }, []);
+
     return (
         <main>
             <GlobalStyles themeName="indigo" />
