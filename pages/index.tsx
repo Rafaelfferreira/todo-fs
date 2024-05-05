@@ -11,12 +11,13 @@ type HomeTodo = {
 };
 
 function HomePage() {
+    const [page, setPage] = React.useState(1);
     const [todos, setTodos] = React.useState<HomeTodo[]>([]);
 
     // UseEffect allow us to run code when the component is rendered and upload it whenever the second parameter is refreshed
     // In this case, since we pass [] to the second parameter, the code will only run once
     React.useEffect(() => {
-        todoController.get().then((todos) => {
+        todoController.get({ page }).then(({ todos }) => {
             setTodos(todos);
         });
     }, []);
@@ -94,14 +95,19 @@ function HomePage() {
                             </td>
                         </tr> */}
 
-                        {/* <tr>
+                        <tr>
                             <td
                                 colSpan={4}
                                 align="center"
                                 style={{ textAlign: "center" }}
                             >
-                                <button data-type="load-more">
-                                    Carregar mais{" "}
+                                <button
+                                    data-type="load-more"
+                                    onClick={() => {
+                                        setPage(page + 1);
+                                    }}
+                                >
+                                    Pagina {page}, Carregar mais{" "}
                                     <span
                                         style={{
                                             display: "inline-block",
@@ -113,7 +119,7 @@ function HomePage() {
                                     </span>
                                 </button>
                             </td>
-                        </tr> */}
+                        </tr>
                     </tbody>
                 </table>
             </section>
