@@ -5,7 +5,8 @@ module.exports = {
         es2021: true,
         node: true,
     },
-    plugins: ["react", "prettier", "@typescript-eslint"],
+    // plugins: ["react", "prettier", "@typescript-eslint"],
+    plugins: ["react", "@typescript-eslint"],
     extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
@@ -25,6 +26,8 @@ module.exports = {
     ignorePatterns: ["node_modules/"],
     // Cherry of the Cake
     rules: {
+        "prettier/prettier": 0,
+        "nonblock-statement-body-position": "off",
         "no-console": "error",
         "react/no-unknown-property": ["error", { ignore: ["jsx", "global"] }],
     },
