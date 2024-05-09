@@ -18,34 +18,36 @@ type Todo = {
 
 // MARK: - Functions
 function get({ page, limit }: TodoRepositoryGetParams): TodoRepositoryGetOutput {
-    return fetch("http://localhost:3000/api/todos").then(
+    return fetch(`http://localhost:3000/api/todos?page=${page}&limit=${limit}`).then(
         async (serverResponse) => {
             const todosString = await serverResponse.text();
-            const todosFromServer = parseTodosFromServer(JSON.parse(todosString)).todos;
-
-            const ALL_TODOS = todosFromServer;
-            const startIndex = (page - 1) * limit;
-            const endIndex = page * limit;
-            const paginatedTodos = ALL_TODOS.slice(startIndex, endIndex);
-            const totalPages = Math.ceil(ALL_TODOS.length / limit);
+            const parsedResponse = parseTodosFromServer(JSON.parse(todosString));
 
             return {
-                todos: paginatedTodos,
-                total: ALL_TODOS.length,
-                pages: totalPages,
+                todos: parsedResponse.todos,
+                total: parsedResponse.total,
+                pages: parsedResponse.pages,
             };
         }
     );
 }
 
-function parseTodosFromServer(responseBody: unknown): { todos: Todo[] } {
+function parseTodosFromServer(responseBody: unknown): { 
+    todos: Todo[],
+    total: number,
+    pages: number
+} {
     if(
         responseBody !== null && 
         typeof responseBody === "object" && 
         "todos" in responseBody &&
+        "total" in responseBody &&
+        "pages" in responseBody &&
         Array.isArray(responseBody.todos)
     ) {
         return {
+            total: responseBody.total,
+            pages: responseBody.pages,
             todos: responseBody.todos.map((todo: unknown) => {
                 if(todo == null && typeof todo !== "object") {
                     throw new Error("Invalid todo from API");
@@ -69,6 +71,8 @@ function parseTodosFromServer(responseBody: unknown): { todos: Todo[] } {
     }
     
     return {
+        pages: 1,
+        total: 0,
         todos: []
     }
 };
