@@ -11,16 +11,26 @@ type HomeTodo = {
 };
 
 function HomePage() {
+    // the function defined on the right side to update the value can accept a function with the old value as the parameter
+    const [totalPages, setTotalPages] = React.useState(0);
     const [page, setPage] = React.useState(1);
     const [todos, setTodos] = React.useState<HomeTodo[]>([]);
 
+    const hasMorePages = totalPages > page;
+
     // UseEffect allow us to run code when the component is rendered and upload it whenever the second parameter is refreshed
-    // In this case, since we pass [] to the second parameter, the code will only run once
+    // If we pass [] to the second parameter, the code will only run once
     React.useEffect(() => {
-        todoController.get({ page }).then(({ todos }) => {
-            setTodos(todos);
+        todoController.get({ page }).then(({ todos, pages }) => {
+            setTodos((oldTodos) => {
+                return [
+                    ...oldTodos,
+                    ...todos,
+                ]
+            });
+            setTotalPages(pages);
         });
-    }, []);
+    }, [page]);
 
     return (
         <main>
@@ -95,7 +105,7 @@ function HomePage() {
                             </td>
                         </tr> */}
 
-                        <tr>
+                        {hasMorePages && (<tr>
                             <td
                                 colSpan={4}
                                 align="center"
@@ -119,7 +129,7 @@ function HomePage() {
                                     </span>
                                 </button>
                             </td>
-                        </tr>
+                        </tr>)}
                     </tbody>
                 </table>
             </section>

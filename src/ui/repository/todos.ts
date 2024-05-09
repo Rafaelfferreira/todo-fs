@@ -32,7 +32,7 @@ function get({ page, limit }: TodoRepositoryGetParams): TodoRepositoryGetOutput 
             return {
                 todos: paginatedTodos,
                 total: ALL_TODOS.length,
-                number: totalPages,
+                pages: totalPages,
             };
         }
     );
