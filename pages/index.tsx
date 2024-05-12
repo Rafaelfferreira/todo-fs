@@ -129,7 +129,7 @@ function HomePage() {
 
                                         todoController
                                             .get({ page: nextPage })
-                                            .then(({ todos, pages }) => {
+                                            .then(({ todos }) => {
                                                 setTodos((oldTodos) => {
                                                     return [...oldTodos, ...todos];
                                                 })
