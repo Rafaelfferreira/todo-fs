@@ -11,7 +11,7 @@ type TodoRepositoryGetOutput = {
     pages: number;
 }
 
-function get({ page, limit }: TodoRepositoryGetParams = {}) {
+function get({ page, limit }: TodoRepositoryGetParams = {}): TodoRepositoryGetOutput {
     const currentPage = page || 1;
     const currentLimit = limit || 2;
 

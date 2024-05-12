@@ -1,6 +1,4 @@
-import { read } from "@db-crud-todo";
 import { todoRepository } from "@server/repository/todo";
-import { error } from "console";
 import { NextApiRequest, NextApiResponse } from "next";
 
 function get(req: NextApiRequest, res: NextApiResponse) {

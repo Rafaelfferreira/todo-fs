@@ -12,24 +12,33 @@ type HomeTodo = {
 
 function HomePage() {
     // the function defined on the right side to update the value can accept a function with the old value as the parameter
+    const [initialLoadedCompleted, setInitialLoadedCompleted] = React.useState(false);
     const [totalPages, setTotalPages] = React.useState(0);
     const [page, setPage] = React.useState(1);
+    const [isLoading, setIsLoading] = React.useState(true);
     const [todos, setTodos] = React.useState<HomeTodo[]>([]);
+    const hasNoTodos = todos.length === 0 && !isLoading;
 
     const hasMorePages = totalPages > page;
 
     // UseEffect allow us to run code when the component is rendered and upload it whenever the second parameter is refreshed
     // If we pass [] to the second parameter, the code will only run once
     React.useEffect(() => {
-        todoController.get({ page }).then(({ todos, pages }) => {
-            setTodos((oldTodos) => {
-                return [
-                    ...oldTodos,
-                    ...todos,
-                ]
+        setInitialLoadedCompleted(true);
+        if (!initialLoadedCompleted) {
+            todoController.get({ page }).then(({ todos, pages }) => {
+                setTodos((oldTodos) => {
+                    return [
+                        ...oldTodos,
+                        ...todos,
+                    ]
+                })
+                setTotalPages(pages);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
-            setTotalPages(pages);
-        });
+        }
     }, [page]);
 
     return (
@@ -89,7 +98,7 @@ function HomePage() {
                             );
                         })}
 
-                        {/* <tr>
+                        {isLoading && (<tr>
                             <td
                                 colSpan={4}
                                 align="center"
@@ -97,13 +106,13 @@ function HomePage() {
                             >
                                 Carregando...
                             </td>
-                        </tr> */}
+                        </tr>)}
 
-                        {/* <tr>
+                        {hasNoTodos && (<tr>
                             <td colSpan={4} align="center">
                                 Nenhum item encontrado
                             </td>
-                        </tr> */}
+                        </tr>)}
 
                         {hasMorePages && (<tr>
                             <td
@@ -114,7 +123,20 @@ function HomePage() {
                                 <button
                                     data-type="load-more"
                                     onClick={() => {
-                                        setPage(page + 1);
+                                        setIsLoading(true);
+                                        const nextPage = page + 1;
+                                        setPage(nextPage);
+
+                                        todoController
+                                            .get({ page: nextPage })
+                                            .then(({ todos, pages }) => {
+                                                setTodos((oldTodos) => {
+                                                    return [...oldTodos, ...todos];
+                                                })
+                                            })
+                                            .finally(() => {
+                                                setIsLoading(false);
+                                            })
                                     }}
                                 >
                                     Pagina {page}, Carregar mais{" "}
