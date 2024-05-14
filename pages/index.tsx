@@ -11,8 +11,10 @@ type HomeTodo = {
 };
 
 function HomePage() {
+    // Use ref is used to track values that don't need to trigger an UI update
+    const initialLoadComplete = React.useRef(false);
+
     // the function defined on the right side to update the value can accept a function with the old value as the parameter
-    const [initialLoadedCompleted, setInitialLoadedCompleted] = React.useState(false);
     const [totalPages, setTotalPages] = React.useState(0);
     const [page, setPage] = React.useState(1);
     const [search, setSearch] = React.useState("");
@@ -25,8 +27,7 @@ function HomePage() {
     // UseEffect allow us to run code when the component is rendered and upload it whenever the second parameter is refreshed
     // If we pass [] to the second parameter, the code will only run once
     React.useEffect(() => {
-        setInitialLoadedCompleted(true);
-        if (!initialLoadedCompleted) {
+        if (!initialLoadComplete.current) {
             todoController.get({ page }).then(({ todos, pages }) => {
                 setTodos((oldTodos) => {
                     return [
@@ -38,6 +39,7 @@ function HomePage() {
             })
             .finally(() => {
                 setIsLoading(false);
+                initialLoadComplete.current = true;
             });
         }
     }, [page]);
