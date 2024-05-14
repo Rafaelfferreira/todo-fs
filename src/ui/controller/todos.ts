@@ -12,6 +12,21 @@ async function get({ page }: todoControllerGetParams) {
     return teste;
 }
 
+// This is how you declare a generic function on TypeScript. The <Todo> is a placeholder name for a generic
+function searchTodos<Todo>(
+    search: string, 
+    todos: Array<Todo & { content: string }>
+): Array<Todo> {
+    const todosToDisplay = todos.filter((todo) => {
+        const searchTermNormalized = search.toLowerCase();
+        const contentNormalized = todo.content.toLowerCase();
+        return contentNormalized.includes(searchTermNormalized);
+    });
+
+    return todosToDisplay;
+};
+
 export const todoController = {
-    get,
+    get, 
+    searchTodos,
 };
