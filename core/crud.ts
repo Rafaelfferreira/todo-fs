@@ -15,6 +15,27 @@ type Todo = {
 };
 
 // MARK: - CRUD FUNCTIONS
+export function create(content: string): Todo {
+    const todo: Todo = {
+        id: uuid(),
+        date: new Date().toISOString(),
+        content: content,
+        done: false,
+    };
+
+    const todos: Array<Todo> = [
+        ...read(),
+        todo,
+    ];
+
+    // salvar o content no sistema
+    fs.writeFileSync(DB_FILE_PATH, JSON.stringify({
+        todos,
+        "dogs": []
+    }, null, 2)); // Sync -> synchronous
+    return todo;
+}
+
 export function read(): Array<Todo> {
     const dbString = fs.readFileSync(DB_FILE_PATH, "utf-8");
     const db = JSON.parse(dbString || "{}");

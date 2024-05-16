@@ -26,7 +26,30 @@ function searchTodos<Todo>(
     return todosToDisplay;
 };
 
+type todoControllerCreateParams = {
+    content?: string;
+    onSuccess: (todo: any) => void;
+    onError: () => void;
+}
+function create({ content, onSuccess, onError }: todoControllerCreateParams) {
+    // Fail fast validation
+    if (!content) {
+        onError();
+        return
+    }
+
+    // this will come from the repository
+    const todo = {
+        id: "12345",
+        content,
+        date: new Date(),
+        done: false,
+    };
+    onSuccess(todo);
+};
+
 export const todoController = {
     get, 
     searchTodos,
+    create,
 };

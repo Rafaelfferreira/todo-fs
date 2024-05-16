@@ -5,12 +5,18 @@ export default function handler(
     request: NextApiRequest,
     response: NextApiResponse
 ) {
-    if (request.method !== "GET") {
-        response.status(405).json({
-            message: "Method not allowed",
-        });
+    if (request.method === "GET") {
+        todoController.get(request, response);    
         return;
     }
 
-    todoController.get(request, response);
+    if (request.method === "POST") {
+        todoController.create(request, response);
+        return;
+    }
+
+    
+    response.status(405).json({
+        message: "Method not allowed",
+    });
 }

@@ -20,6 +20,7 @@ function HomePage() {
     const [search, setSearch] = React.useState("");
     const [isLoading, setIsLoading] = React.useState(true);
     const [todos, setTodos] = React.useState<HomeTodo[]>([]);
+    const [newTodoContent, setNewTodoContent] = React.useState("");
     const homeTodos = todoController.searchTodos<HomeTodo>(search, todos);
     const hasNoTodos = homeTodos.length === 0 && !isLoading;
     const hasMorePages = totalPages > page;
@@ -55,8 +56,28 @@ function HomePage() {
                 <div className="typewriter">
                     <h1>O que fazer hoje?</h1>
                 </div>
-                <form>
-                    <input type="text" placeholder="Correr, Estudar..." />
+                <form onSubmit={(event) => {
+                    event.preventDefault();
+                    todoController.create({
+                        content: newTodoContent,
+                        onSuccess(newTodo: HomeTodo) {
+                            setTodos((oldTodos) => {
+                                return [newTodo, ...oldTodos];
+                            })
+                            setNewTodoContent("");
+                        },
+                        onError() {
+                            alert("You need to provide a content for the new task");
+                        }
+                    });
+                }}>
+                    <input 
+                        type="text" 
+                        placeholder="Correr, Estudar..."
+                        value = {newTodoContent}
+                        onChange = { function newTodoHandler(event) {
+                            setNewTodoContent(event.target.value);
+                        }} />
                     <button type="submit" aria-label="Adicionar novo item">
                         +
                     </button>
