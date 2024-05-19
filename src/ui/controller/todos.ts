@@ -1,4 +1,6 @@
 import { todoRepository } from "@ui/repository/todos";
+import { Todo } from "@ui/schema/todo";
+import { z as schema } from "zod"
 
 type todoControllerGetParams = {
     page: number;
@@ -28,24 +30,24 @@ function searchTodos<Todo>(
 
 type todoControllerCreateParams = {
     content?: string;
-    onSuccess: (todo: any) => void;
+    onSuccess: (todo: Todo) => void;
     onError: () => void;
 }
 function create({ content, onSuccess, onError }: todoControllerCreateParams) {
     // Fail fast validation
-    if (!content) {
+    const parsedParams = schema.string().min(1).safeParse(content);
+    if (!parsedParams.success) {
         onError();
         return
     }
 
-    // this will come from the repository
-    const todo = {
-        id: "12345",
-        content,
-        date: new Date(),
-        done: false,
-    };
-    onSuccess(todo);
+    todoRepository.createWithContent(parsedParams.data)
+        .then((newTodo) => {
+            onSuccess(newTodo);
+        })
+        .catch(() => {
+            onError();
+        });
 };
 
 export const todoController = {

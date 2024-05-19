@@ -1,3 +1,6 @@
+import { z as schema} from "zod";
+import { Todo, TodoSchema } from "@ui/schema/todo";
+
 // MARK: - Types
 type TodoRepositoryGetParams = {
     page: number;
@@ -7,13 +10,6 @@ type TodoRepositoryGetOutput = {
     todos: Todo[];
     total: number;
     pages: number;
-};
-
-type Todo = {
-    id: string;
-    content: string;
-    date: Date;
-    done: boolean;
 };
 
 // MARK: - Functions
@@ -46,8 +42,8 @@ function parseTodosFromServer(responseBody: unknown): {
         Array.isArray(responseBody.todos)
     ) {
         return {
-            total: responseBody.total,
-            pages: responseBody.pages,
+            total: Number(responseBody.total),
+            pages: Number(responseBody.pages),
             todos: responseBody.todos.map((todo: unknown) => {
                 if(todo == null && typeof todo !== "object") {
                     throw new Error("Invalid todo from API");
@@ -64,7 +60,7 @@ function parseTodosFromServer(responseBody: unknown): {
                     id,
                     content,
                     done: String(done).toLowerCase() === "true",
-                    date: new Date(date),
+                    date: date,
                 }
             }),
         }
@@ -77,7 +73,38 @@ function parseTodosFromServer(responseBody: unknown): {
     }
 };
 
+export async function createWithContent(content: string): Promise<Todo> {
+    const response = await fetch("/api/todos", {
+        method: "POST",
+        headers: {
+            // MIME type
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            content,
+        }),
+    });
+
+    if(response.ok) {
+        const serverResponse = await response.json();
+        const serverResponseSchema = schema.object({
+            todo: TodoSchema,
+        });
+        const serverResponseParsed = serverResponseSchema.safeParse(serverResponse);
+        
+        if (!serverResponseParsed.success) {
+            throw new Error("Failed to create TODO");
+        }
+
+        const todo = serverResponseParsed.data.todo;
+        return todo;
+    }
+
+    throw new Error("Failed to create TODO");
+}
+
 // MARK: - Exports
 export const todoRepository = {
     get,
+    createWithContent,
 };
