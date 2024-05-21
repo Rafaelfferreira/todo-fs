@@ -44,3 +44,25 @@ export function read(): Array<Todo> {
     }
     return db.todos;
 }
+
+export function update(id: UUID, partialTodo: Partial<Todo>): Todo { // Partial<Todo> -> Partial is a built-in type that makes all properties of Todo optional
+    let updatedTodo;
+
+    const todos = read();
+    todos.forEach((currentItem) => {
+        const isToUpdate = currentItem.id === id;
+        if(isToUpdate) {
+            updatedTodo = Object.assign(currentItem, partialTodo); // Object.assign -> built-in function that copies all properties from the second object to the first object
+        }
+    });
+    
+    fs.writeFileSync(DB_FILE_PATH, JSON.stringify({
+        todos,
+    }, null, 2));
+
+    if(!updatedTodo) {
+        throw new Error("Please provide another ID!")
+    }
+
+    return updatedTodo;
+}
