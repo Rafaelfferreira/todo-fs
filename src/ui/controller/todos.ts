@@ -50,8 +50,27 @@ function create({ content, onSuccess, onError }: todoControllerCreateParams) {
         });
 };
 
+type TodoControllerToggleDoneParams = {
+    id: string,
+    onError: () => void,
+    updateTodoOnScreen: () => void,
+}
+function toggleDone({ id, onError, updateTodoOnScreen}: TodoControllerToggleDoneParams) {
+    // Optimistic update - we update the UI before the server responds with the expected state
+    // updateTodoOnScreen(); 
+
+    // Update real
+    todoRepository.toggleDone(id).then(() => {
+        updateTodoOnScreen();         
+    })
+    .catch(() => {
+        onError();
+    })
+}
+
 export const todoController = {
     get, 
     searchTodos,
     create,
+    toggleDone,
 };
