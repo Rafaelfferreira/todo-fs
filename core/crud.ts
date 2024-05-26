@@ -66,3 +66,14 @@ export function update(id: UUID, partialTodo: Partial<Todo>): Todo { // Partial<
 
     return updatedTodo;
 }
+
+export function deleteById(id: UUID) {
+    const todos = read();
+
+    const todosWithoutDeleted = todos.filter((todo) => {
+        if(todo.id === id) { return false; }
+        return true;
+    });
+
+    fs.writeFileSync(DB_FILE_PATH, JSON.stringify({ todos: todosWithoutDeleted }, null, 2));
+}
