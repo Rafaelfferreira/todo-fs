@@ -11,7 +11,7 @@
     "lint:fix": "npm run lint -- --fix",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "test": "start-server-and-test dev http://localhost:3001 cy:run"
+    "test": "start-server-and-test dev http://localhost:3000 cy:run"
   },
   "author": "",
   "license": "ISC",
