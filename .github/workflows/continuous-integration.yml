@@ -8,5 +8,5 @@ jobs:
     lint:
         runs-on: ubuntu-latest
         steps: 
-            - name: "Lint"
-            run: "echo teste"
+              - name: "Lint"
+                run: "echo Lintind..."
