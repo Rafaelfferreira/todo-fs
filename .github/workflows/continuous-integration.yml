@@ -13,7 +13,7 @@ jobs:
             ## ===========================
             - name: "Debug"
               run: |
-                "ls -la"
+                ls -la
                 echo "Second command line!"
             - name: "Install Dependencies"
               run: "npm install "
