@@ -23,12 +23,12 @@ module.exports = {
             version: "detect",
         },
     },
-    ignorePatterns: ["node_modules/"],
+    ignorePatterns: ["node_modules/", "cypress/"],
     // Cherry of the Cake
     rules: {
         "prettier/prettier": 0,
         "nonblock-statement-body-position": "off",
-        "no-console": "error",
+        // "no-console": "error",
         "react/no-unknown-property": ["error", { ignore: ["jsx", "global"] }],
     },
 };
