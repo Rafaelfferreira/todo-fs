@@ -1,0 +1,21 @@
+name: "CI - Continuous Integration"
+
+on:
+    pull_request:
+        types: [opened, synchronize]
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps: 
+            ## [Common_CI_Steps]
+            - uses: actions/checkout@v3
+            ## ===========================
+            - name: "Debug"
+              run: |
+                ls -la
+                echo "Second command line!"
+            - name: "Install Dependencies"
+              run: "npm install "
+            - name: "Lint"
+              run: "npm run lint"
