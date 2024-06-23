@@ -1,6 +1,17 @@
 import { read, create, update, deleteById as dbDeleteById } from "@db-crud-todo";
 import { HttpNotFoundError } from "@server/infra/errors";
 
+// MARK: - Supabase config 
+// TODO: - Separate it in another file
+// ############################################
+import { createClient } from '@supabase/supabase-js';
+import { todo } from "node:test";
+
+const supabaseUrl = process.env.SUPABASE_URL || "";
+const supabaseKey = process.env.SUPABASE__PUBLIC_KEY || ""; //handling optional to make sure it is the correct type
+const supabase = createClient(supabaseUrl, supabaseKey);
+// ############################################
+
 type TodoRepositoryGetParams = {
     page?: number;
     limit?: number;
@@ -12,21 +23,20 @@ type TodoRepositoryGetOutput = {
     pages: number;
 }
 
-function get({ page, limit }: TodoRepositoryGetParams = {}): TodoRepositoryGetOutput {
-    const currentPage = page || 1;
-    const currentLimit = limit || 2;
+async function get({ page, limit }: TodoRepositoryGetParams = {}): Promise<TodoRepositoryGetOutput> {
+    const { data, error, count } = await supabase.from('todos').select("*", {
+        count: 'exact'
+    });
 
-    const ALL_TODOS = read().reverse();
+    if (error) throw new Error("Failed to fetch data");
 
-    const startIndex = (currentPage - 1) * currentLimit;
-    const endIndex = currentPage * currentLimit;
-    const paginatedTodos = ALL_TODOS.slice(startIndex, endIndex);
-    const totalPages = Math.ceil(ALL_TODOS.length / currentLimit);
+    const todos = data as Todo[];
+    const total = count || todos.length;
 
     return {
-        total: ALL_TODOS.length,
-        todos: paginatedTodos,
-        pages: totalPages
+        total: total,
+        todos: todos,
+        pages: 1 // 1 because we're bringing all the todos
     }
 };
 
