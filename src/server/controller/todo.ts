@@ -87,7 +87,6 @@ async function toggleDone(req: NextApiRequest, res: NextApiResponse) {
             todo: updatedTodo,
         })
     } catch (error) {
-        console.log("ERROR: ", error);
         if (error instanceof Error) {
             res.status(404).json({
                 error: {

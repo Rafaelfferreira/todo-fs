@@ -100,9 +100,7 @@ async function toggleDone(id: string): Promise<Todo> {
         .select();
 
     if (error) throw new Error("Failed to update TODO by id");
-    const parsedData = TodoSchema.parse(data[0]);
-
-    console.log("PARSED DATA: ", parsedData);
+    const parsedData = TodoSchema.parse(data);
 
     return parsedData;
 }
