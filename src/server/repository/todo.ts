@@ -1,17 +1,11 @@
 import { read, create, update, deleteById as dbDeleteById } from "@db-crud-todo";
+import { supabase } from "@server/infra/db/supabase";
 import { HttpNotFoundError } from "@server/infra/errors";
 import { Todo, TodoSchema } from "@server/schema/todo";
 
 // MARK: - Supabase config 
 // TODO: - Separate it in another file
 // ############################################
-import { createClient } from '@supabase/supabase-js';
-import { parse } from "node:path";
-import { todo } from "node:test";
-
-const supabaseUrl = process.env.SUPABASE_URL || "";
-const supabaseKey = process.env.SUPABASE__PUBLIC_KEY || ""; //handling optional to make sure it is the correct type
-const supabase = createClient(supabaseUrl, supabaseKey);
 // ############################################
 
 type TodoRepositoryGetParams = {
@@ -100,7 +94,7 @@ async function toggleDone(id: string): Promise<Todo> {
         .select();
 
     if (error) throw new Error("Failed to update TODO by id");
-    const parsedData = TodoSchema.parse(data);
+    const parsedData = TodoSchema.parse(data[0]);
 
     return parsedData;
 }
