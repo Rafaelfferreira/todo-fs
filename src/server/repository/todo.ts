@@ -68,24 +68,43 @@ async function createWithContent(content: string): Promise<Todo> {
     .select()
     .single()
 
-    console.log("ERROR: ", error);
-
     if (error) throw new Error("Failed to create todo");
     const parsedData = TodoSchema.parse(data);
     return parsedData;
 };
 
+async function getTodoById(id: string): Promise<Todo> {
+    const { data, error } = await supabase
+        .from("todos")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    if (error) throw new Error("Failed to find todo with id");
+
+    const parsedData = TodoSchema.safeParse(data);
+    if (!parsedData.success) throw new Error("Failed to parse TODO with given id");
+
+    return parsedData.data;
+}
+
 async function toggleDone(id: string): Promise<Todo> {
-    const ALL_TODOS = read();
-    const todo = ALL_TODOS.find((todo) => todo.id === id);
+    const todo = await getTodoById(id);
 
-    if(!todo) throw new Error(`Todo with id "${id}" not found.`);
+    const { data, error } = await supabase
+        .from("todos")
+        .update({
+            done: !todo.done
+        })
+        .eq("id", id)
+        .select();
 
-    const updatedTodo = update(todo.id, {
-        done: !todo.done,
-    })
+    if (error) throw new Error("Failed to update TODO by id");
+    const parsedData = TodoSchema.parse(data[0]);
 
-    return updatedTodo;
+    console.log("PARSED DATA: ", parsedData);
+
+    return parsedData;
 }
 
 async function deleteById(id: string) {

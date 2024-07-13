@@ -107,13 +107,14 @@ async function toggleDone(todoId: string): Promise<Todo> {
     const response = await fetch(`/api/todos/${todoId}/toggle-done`, {
         method: "PUT"
     });
-    
+
     if(response.ok) {
         const serverResponse = await response.json(); // FIXME: Precisa colocar await?
         const serverResponseSchema = schema.object({
             todo: TodoSchema,
         });
         const serverResponseParsed = serverResponseSchema.safeParse(serverResponse);
+
         if(!serverResponseParsed.success) {
             throw new Error(`Failed to update TODO with id ${todoId}`);
         }

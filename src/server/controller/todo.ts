@@ -83,11 +83,11 @@ async function toggleDone(req: NextApiRequest, res: NextApiResponse) {
 
     try {
         const updatedTodo = await todoRepository.toggleDone(todoId);
-
-    res.status(200).json({
-        todo: updatedTodo,
-    })
+        res.status(200).json({
+            todo: updatedTodo,
+        })
     } catch (error) {
+        console.log("ERROR: ", error);
         if (error instanceof Error) {
             res.status(404).json({
                 error: {
