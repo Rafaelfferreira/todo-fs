@@ -35,6 +35,7 @@ async function get({ page, limit }: TodoRepositoryGetParams = {}): Promise<TodoR
     const { data, error, count } = await supabase.from('todos').select("*", {
         count: 'exact'
     })
+    .order("date", { ascending: false } )
     .range(startIndex, endIndex);
 
     if (error) throw new Error("Failed to fetch data");
@@ -57,8 +58,21 @@ async function get({ page, limit }: TodoRepositoryGetParams = {}): Promise<TodoR
 };
 
 async function createWithContent(content: string): Promise<Todo> {
-    const newTodo = create(content);
-    return newTodo;
+    // const newTodo = create(content);
+    // return newTodo;
+    const { data, error } = await supabase.from('todos').insert([
+        {
+            content,
+        }
+    ])
+    .select()
+    .single()
+
+    console.log("ERROR: ", error);
+
+    if (error) throw new Error("Failed to create todo");
+    const parsedData = TodoSchema.parse(data);
+    return parsedData;
 };
 
 async function toggleDone(id: string): Promise<Todo> {
@@ -75,12 +89,11 @@ async function toggleDone(id: string): Promise<Todo> {
 }
 
 async function deleteById(id: string) {
-    const ALL_TODOS = read();
-    const todo = ALL_TODOS.find((todo) => todo.id === id);
+    const { error } = await supabase.from("todos").delete().match({
+        id,
+    });
 
-    if (!todo) throw new HttpNotFoundError(`Todo with id ${id} not found`);
-
-    dbDeleteById(id);
+    if(error) throw new HttpNotFoundError(`Todo with id ${id} not found`);
 }
 
 export const todoRepository = {
