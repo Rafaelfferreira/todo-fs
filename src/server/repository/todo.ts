@@ -2,11 +2,6 @@ import { supabase } from "@server/infra/db/supabase";
 import { HttpNotFoundError } from "@server/infra/errors";
 import { Todo, TodoSchema } from "@server/schema/todo";
 
-// MARK: - Supabase config 
-// TODO: - Separate it in another file
-// ############################################
-// ############################################
-
 type TodoRepositoryGetParams = {
     page?: number;
     limit?: number;
