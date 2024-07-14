@@ -1,0 +1,35 @@
+name: "CI - Continuous Integration"
+
+on:
+    pull_request:
+        types: [opened, synchronize]
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps: 
+            ## [Common_CI_Steps]
+            - uses: actions/checkout@v3
+            ## ===========================
+            - name: "Debug"
+              run: |
+                ls -la
+                echo "Second command line!"
+            - name: "Install Dependencies"
+              run: "npm install"
+            - name: "Lint"
+              run: "npm run lint"
+    test:
+        runs-on: ubuntu-22.04
+        container:
+            image: "cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1"
+            options: --user 1001
+        steps:
+            ## [Common_CI_Steps]
+            - uses: actions/checkout@v3
+            
+            - name: "Install Dependencies"
+              run: "npm install "
+            ## ===========================
+            - name: "Test"
+              run: "npm run test"

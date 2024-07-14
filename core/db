@@ -1,0 +1,29 @@
+{
+  "todos": [
+    {
+      "id": "30c08ad9-cd30-4e5f-8fb9-b84cb358b9a5",
+      "date": "2024-04-27T22:31:07.560Z",
+      "content": "Primeira TODO",
+      "done": true
+    },
+    {
+      "id": "a49eb7da-9586-4646-b2d9-c365e84b261d",
+      "date": "2024-04-27T22:31:07.561Z",
+      "content": "Terceira TODO com novo content!",
+      "done": false
+    },
+    {
+      "id": "4613fcbf-2561-47c8-9021-30cb0a4e226f",
+      "date": "2024-05-16T01:36:18.008Z",
+      "content": "Next day task",
+      "done": true
+    },
+    {
+      "id": "c733e23e-37f7-4cc0-b765-a3de7a157345",
+      "date": "2024-05-19T20:32:49.395Z",
+      "content": "alo alo w brazil",
+      "done": false
+    }
+  ],
+  "dogs": []
+}
