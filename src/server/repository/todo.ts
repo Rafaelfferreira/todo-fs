@@ -46,8 +46,6 @@ async function get({ page, limit }: TodoRepositoryGetParams = {}): Promise<TodoR
 };
 
 async function createWithContent(content: string): Promise<Todo> {
-    // const newTodo = create(content);
-    // return newTodo;
     const { data, error } = await supabase.from('todos').insert([
         {
             content,
