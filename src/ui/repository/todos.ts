@@ -13,7 +13,7 @@ type TodoRepositoryGetOutput = {
 };
 
 // MARK: - Functions
-function get({ page, limit }: TodoRepositoryGetParams): TodoRepositoryGetOutput {
+function get({ page, limit }: TodoRepositoryGetParams): Promise<TodoRepositoryGetOutput> {
     return fetch(`http://localhost:3000/api/todos?page=${page}&limit=${limit}`).then(
         async (serverResponse) => {
             const todosString = await serverResponse.text();
